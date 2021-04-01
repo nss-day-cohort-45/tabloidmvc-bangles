@@ -4,15 +4,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TabloidMVC.Models;
+using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
 {
     public class CategoryController : Controller
     {
         // GET: CategoryController
+        private readonly ICategoryRepository _categoryRepo;
+
+        public CategoryController(ICategoryRepository categoryRepository)
+        {
+            _categoryRepo = categoryRepository; 
+        }
+
         public ActionResult Index()
         {
-            return View();
+            List<Category> categories = _categoryRepo.GetAll();
+            return View(categories);
         }
 
         // GET: CategoryController/Details/5
