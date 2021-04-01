@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TabloidMVC.Models;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -20,7 +21,8 @@ namespace TabloidMVC.Controllers
         // GET: TagController
         public ActionResult Index()
         {
-            return View();
+            List<Tag> tags = _tagRepository.GetAllTags();
+            return View(tags);
         }
 
         // GET: TagController/Details/5
