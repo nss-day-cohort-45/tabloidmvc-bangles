@@ -25,26 +25,27 @@ namespace TabloidMVC.Controllers
             return View(categories);
         }
 
-        // GET: CategoryController/Details/5
+        // GET Details
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: CategoryController/Create
+        // GET Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoryController/Create
+        // POST Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Category category)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _categoryRepo.AddCategory(category);
+                return RedirectToAction(nameof(Index),"Category");
             }
             catch
             {
@@ -52,34 +53,43 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        // GET: CategoryController/Edit/5
+        // GET Edit
         public ActionResult Edit(int id)
         {
-            return View();
+            Category category = _categoryRepo.GetCategoryById(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
         }
 
-        // POST: CategoryController/Edit/5
+        // POST Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Category category)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _categoryRepo.UpdateCategory(category);
+
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(category);
             }
         }
 
-        // GET: CategoryController/Delete/5
+        // GET Delete
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: CategoryController/Delete/5
+        // POST Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
