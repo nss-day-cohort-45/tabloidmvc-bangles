@@ -97,6 +97,24 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public void Deactivate(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE UserProfile
+                                SET IsDeactivated = 1
+                            WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         private UserProfile NewUserFromReader(SqlDataReader reader)
         {
             return new UserProfile()
