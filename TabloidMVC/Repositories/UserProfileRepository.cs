@@ -40,6 +40,37 @@ namespace TabloidMVC.Repositories
             }
         }
 
+    public List<UserType> GetUserTypes()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, Name
+                            FROM UserType";
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    List<UserType> types = new List<UserType>();
+                    while (reader.Read())
+                    {
+                        UserType type = new UserType()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name"))
+                        };
+                        types.Add(type);
+                    }
+
+                    reader.Close();
+
+                    return types;
+                }
+            }
+        }
+
         public List<UserProfile> GetDeactivated()
         {
             using (SqlConnection conn = Connection)
@@ -178,6 +209,27 @@ namespace TabloidMVC.Repositories
                         UPDATE UserProfile
                             SET IsDeactivated = 0
                         WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", user.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateUserType(UserProfile user)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE UserProfile
+                            SET
+                                UserTypeId = @userTypeId
+                        WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@userTypeId", user.UserTypeId);
                     cmd.Parameters.AddWithValue("@id", user.Id);
 
                     cmd.ExecuteNonQuery();
