@@ -15,16 +15,23 @@ namespace TabloidMVC.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IPostRepository _postRepository;
 
-        public CommentController (ICommentRepository commentRepository)
+        public CommentController (ICommentRepository commentRepository, IPostRepository postRepository)
         {
             _commentRepository = commentRepository;
+            _postRepository = postRepository;
         }
         // GET: CommentController
         public ActionResult Index(int id) //We will display only the comments related to the current post
         {
-            List<Comment> comments = _commentRepository.GetCommentsByPost(id);
-            return View(comments);
+            // We use a View Model to pass a list of comments and the post object to the view
+            CommentIndexViewModel vm = new CommentIndexViewModel();
+
+            vm.Comments = _commentRepository.GetCommentsByPost(id);
+            vm.Post = _postRepository.GetPublishedPostById(id);
+
+            return View(vm);
         }
 
         // GET: CommentController/Details/5
