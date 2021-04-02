@@ -1,4 +1,4 @@
-﻿@model TabloidMVC.Models.ViewModels.CommentCreateViewModel
+﻿@model TabloidMVC.Models.Comment
 
 @{
     ViewData["Title"] = "Create";
@@ -16,22 +16,17 @@
                 <input asp-for="PostId" type="hidden" class="form-control" />
             </div>
             <div class="form-group">
-                <input asp-for="UserId" type="hidden" class="form-control" />
+                <input asp-for="UserProfileId" type="hidden" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Comment.Subject" class="control-label"></label>
-                <input asp-for="Comment.Subject" class="form-control" />
-                <span asp-validation-for="Comment.Subject" class="text-danger"></span>
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" class="form-control" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Comment.Content" class="control-label"></label>
-                <input asp-for="Comment.Content" class="form-control" />
-                <span asp-validation-for="Comment.Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comment.CreateDateTime" class="control-label"></label>
-                <input asp-for="Comment.CreateDateTime" class="form-control" />
-                <span asp-validation-for="Comment.CreateDateTime" class="text-danger"></span>
+                <label asp-for="Content" class="control-label"></label>
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -41,7 +36,7 @@
 </div>
 
 <div>
-    <a asp-controller="Post" asp-action="Index">Back to List</a>
+    <a asp-controller="Post" asp-action="Details" asp-route-id="@Model.PostId">Back to Post</a>
 </div>
 
 @section Scripts {

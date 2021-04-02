@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,26 +33,31 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: CommentController/Create
-        public ActionResult Create(int postId)
+        public ActionResult Create(int id)
         {
             // Need to return a view that functions as a form that allows users to fill in Comment info with
             // PostId should be based on the post routed from
             // UserProfileId should be based on the current user
-            CommentCreateViewModel vm = new CommentCreateViewModel();
-            vm.PostId = postId;
-            vm.UserId = GetCurrentUserProfileId();
+            Comment comment = new Comment();
 
-            return View(vm);
+            comment.PostId = id;
+            comment.UserProfileId = GetCurrentUserProfileId();
+
+            return View(comment);
         }
 
         // POST: CommentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Comment comment)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                comment.CreateDateTime = DateAndTime.Now;
+
+                _commentRepository.Add(comment);
+
+                return RedirectToAction("Post");
             }
             catch
             {
