@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TabloidMVC.Models;
+using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -48,21 +49,38 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            UserProfile userToEdit = _userProfileRepository.GetById(id);
+            int currentUserId = GetCurrentUserProfileId();
+            UserProfile currentUser = _userProfileRepository.GetById(currentUserId);
+            if (currentUser.UserTypeId == 1)
+            {
+                ChangeUserTypeViewModel vm = new ChangeUserTypeViewModel()
+                {
+                    UserTypes = _userProfileRepository.GetUserTypes(),
+                    User = userToEdit
+                };
+                return View(vm);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // POST: UserProfileController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, ChangeUserTypeViewModel vm)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                UserProfile user = vm.User;
+                _userProfileRepository.UpdateUserType(user);
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(vm);
             }
         }
 
@@ -75,7 +93,8 @@ namespace TabloidMVC.Controllers
             {
                 UserProfile userToDelete = _userProfileRepository.GetById(id);
                 return View(userToDelete);
-            } else
+            }
+            else
             {
                 return NotFound();
             }
