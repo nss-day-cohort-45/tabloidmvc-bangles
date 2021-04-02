@@ -45,27 +45,6 @@ namespace TabloidMVC.Controllers
             return View(user);
         }
 
-        // GET: UserProfileController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UserProfileController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: UserProfileController/Edit/5
         public ActionResult Edit(int id)
         {
