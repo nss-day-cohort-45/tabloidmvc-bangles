@@ -1,0 +1,42 @@
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TabloidMVC.Models;
+
+namespace TabloidMVC.Repositories
+{
+    public class PostTagRepository : BaseRepository, IPostTagRepository
+    {
+        public PostTagRepository(IConfiguration config) : base(config) { }
+        
+        public void AddPostTag(PostTag postTag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO PostTag(PostId, TagId)
+                        OUTPUT INSERTED.ID
+                        VALUES (@postId, @tagId)";
+
+                    cmd.Parameters.AddWithValue("@postId", postTag.PostId);
+                    cmd.Parameters.AddWithValue("@tagId", postTag.TagId);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    postTag.Id = id;
+                }
+            }
+        }
+
+        public void DeletePostTag(int postTagId)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

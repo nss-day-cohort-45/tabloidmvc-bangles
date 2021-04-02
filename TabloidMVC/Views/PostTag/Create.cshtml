@@ -1,0 +1,41 @@
+﻿@model TabloidMVC.Models.ViewModels.PostTagViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container pt-5">
+    <div class="row justify-content-center">
+        <div class="card col-md-12 col-lg-8">
+            <h3 class="mt-3 text-primary text-center card-title">Add tags</h3>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form class="" asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            @foreach (Tag tag in Model.Tags)
+                            {
+                                <input asp-for="@tag.Selected" type="checkbox" checked="@tag.Selected" value="@tag.Id"  class="btn-check" id="@tag.Id" />
+                                <label class="btn btn-outline-primary" for="@tag.Id">@tag.Name</label>
+                                <br />
+                            }
+                            <span asp-validation-for="PostTag.TagId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
