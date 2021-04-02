@@ -170,21 +170,23 @@ namespace TabloidMVC.Controllers
             return int.Parse(id);
         }
 
+
         [HttpPost]
-        public IActionResult Subscribe(Post post, Subscription subscription)
+        [ValidateAntiForgeryToken]
+        public ActionResult Subscribe(int id, Post post)
         {
-            
 
-                Subscription providerUserProfileId = GetCurrentUserProfileId();
-            Subscription subscriberUserProfileId = post.UserProfile.Id;
-                DateTime BeginDateTime = DateAndTime.Now;
+            Subscription subscription = new Subscription();
+            subscription.ProviderUserProfileId = GetCurrentUserProfileId();
+            subscription.SubscriberUserProfileId = id;
+            subscription.BeginDateTime = DateAndTime.Now;
 
-            _subscriptionRepository.Add(Subscription subscription);
+             _subscriptionRepository.Add(subscription);
 
-                return RedirectToAction("Details", new { id = post.Id });
-            
-            
+            return RedirectToAction("Details", new { id = post.Id });
         }
+
+        
 
 
 

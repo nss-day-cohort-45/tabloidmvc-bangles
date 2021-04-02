@@ -13,10 +13,13 @@
             </div>
             <div class="row justify-content-between">
                 <p class="text-secondary">
-                    Written by @Model.UserProfile.DisplayName   
-                    <a  asp-action="Subscribe" asp-route-id="@Model.UserProfile" class="btn btn-outline-primary mx-1" title="Subscribe">
-                        Subscribe
-                    </a>
+                    Written by @Model.UserProfile.DisplayName
+                    @using (Html.BeginForm("Subscribe", "PostConrtoller", new { id = "Subscribe" }, FormMethod.Post))
+                    {
+                        <input type = "Submit" class="submit" value="Subscribe" id="Subscribe" onclick="Subscribe(@Model.UserProfile.Id)" style=" font-size:" 1.2em" />}
+                    @*<a asp-controller="Subscription"  asp-action="Subscribe" asp-route-id="@Model.UserProfile.Id" class="btn btn-outline-primary mx-1" title="Subscribe">
+            Subscribe
+        </a>*@
                 </p>
                 
                 <p class="text-black-50">Published on @Html.DisplayFor(model => model.PublishDateTime)</p>

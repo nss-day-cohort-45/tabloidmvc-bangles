@@ -9,6 +9,6 @@ namespace TabloidMVC.Repositories
     public interface ISubscriptionRepository
     {
         
-        void Add(int provider, int userId);
+        void Add(Subscription subscription);
     }
 }

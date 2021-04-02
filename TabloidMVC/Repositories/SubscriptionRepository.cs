@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TabloidMVC.Models;
+using TabloidMVC.Utils;
 
 namespace TabloidMVC.Repositories
 {
@@ -31,7 +32,7 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@subscriberUserProfileId", subscription.SubscriberUserProfileId);
                     cmd.Parameters.AddWithValue("@providerUserProfileId", subscription.ProviderUserProfileId);
                     cmd.Parameters.AddWithValue("@beginDateTime", subscription.BeginDateTime);
-                    cmd.Parameters.AddWithValue("@endDateTime", subscription.EndDateTime);
+                    cmd.Parameters.AddWithValue("@endDateTime", DbUtils.ValueOrDBNull(subscription.EndDateTime));
                   
 
                     subscription.Id = (int)cmd.ExecuteScalar();
