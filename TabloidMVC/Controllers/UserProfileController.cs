@@ -28,6 +28,12 @@ namespace TabloidMVC.Controllers
             return View(users);
         }
 
+        public ActionResult Deactivated()
+        {
+            var users = _userProfileRepository.GetDeactivated().OrderBy(u => u.DisplayName);
+            return View(users);
+        }
+
         // GET: UserProfileController/Details/5
         public ActionResult Details(int id)
         {
@@ -37,27 +43,6 @@ namespace TabloidMVC.Controllers
                 return NotFound();
             }
             return View(user);
-        }
-
-        // GET: UserProfileController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UserProfileController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // GET: UserProfileController/Edit/5
@@ -110,6 +95,13 @@ namespace TabloidMVC.Controllers
             {
                 return View(user);
             }
+        }
+
+        public ActionResult Reactivate(int id)
+        {
+            UserProfile user = _userProfileRepository.GetById(id);
+            _userProfileRepository.Reactivate(user);
+            return RedirectToAction("Index");
         }
 
         private int GetCurrentUserProfileId()
