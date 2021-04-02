@@ -44,9 +44,9 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT c.Id, c.Name
+                        SELECT Id, [Name]
                         FROM Category c
-                        WHERE c.Id = @id
+                        WHERE Id = @id
                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -125,27 +125,27 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            DELETE FROM Category
-                            WHERE Id = @id
+                            UPDATE Post
+                                             SET CategoryId = 14
+                            WHERE categoryId = @categoryId
                         ";
 
-                    cmd.Parameters.AddWithValue("@id", categoryId);
+                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
 
                     cmd.ExecuteNonQuery();
                 }
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE Post
-                                             SET CategoryId = 14
-                            WHERE categoryId = @id
+                            DELETE FROM Category
+                            WHERE Id = @categoryId
                         ";
 
-                    cmd.Parameters.AddWithValue("@id", categoryId);
+                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
 
                     cmd.ExecuteNonQuery();
                 }
-
             }
         }
 
