@@ -67,7 +67,7 @@ namespace TabloidMVC.Controllers
 
                 // Specifies the specific Action, Controller, and Route Value to return to
                 // The Route Value must be passed as an object
-                return RedirectToAction("Details", "Post", new { id = comment.PostId});
+                return RedirectToAction("Index", "Comment", new { id = comment.PostId});
             }
             catch
             {
