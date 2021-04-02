@@ -18,6 +18,27 @@ namespace TabloidMVC.Controllers
             _userProfileRepository = userProfileRepository;
         }
 
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Register(UserProfile userProfile)
+        {
+            try
+            {
+                userProfile.UserTypeId = 2;
+                _userProfileRepository.AddUser(userProfile);
+                return RedirectToAction("Login");
+            }
+            catch
+            {
+                return View(userProfile);
+            }
+        }
+
         public IActionResult Login()
         {
             return View();
@@ -55,5 +76,6 @@ namespace TabloidMVC.Controllers
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
     }
 }

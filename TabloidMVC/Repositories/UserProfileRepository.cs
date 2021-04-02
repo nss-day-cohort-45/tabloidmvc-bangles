@@ -126,6 +126,29 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public void AddUser(UserProfile user)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO UserProfile (DisplayName, FirstName, LastName, Email, CreateDateTime, ImageLocation, UserTypeId)
+                        OUTPUT INSERTED.ID
+                        VALUES (@displayName, @firstName, @lastName, @email, SYSDATETIME(), @imageLocation, @userTypeId)";
+                    cmd.Parameters.AddWithValue("@displayName", user.DisplayName);
+                    cmd.Parameters.AddWithValue("@firstName", user.FirstName);
+                    cmd.Parameters.AddWithValue("@lastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@email", user.Email);
+                    cmd.Parameters.AddWithValue("@imageLocation", DbUtils.ValueOrDBNull(user.ImageLocation));
+                    cmd.Parameters.AddWithValue("@userTypeId", user.UserTypeId);
+
+                    user.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
         public void Deactivate(int id)
         {
             using (var conn = Connection)
