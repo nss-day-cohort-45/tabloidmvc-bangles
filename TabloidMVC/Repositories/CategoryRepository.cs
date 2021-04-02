@@ -15,7 +15,7 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, name FROM Category";
+                    cmd.CommandText = "SELECT c.id, c.name FROM Category c WHERE c.id != 14  ";
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<Category>();
@@ -44,9 +44,9 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT c.Id, c.Name
+                        SELECT Id, [Name]
                         FROM Category c
-                        WHERE c.Id = @id
+                        WHERE Id = @id
                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -116,7 +116,38 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public void DeleteCategory(int categoryId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
 
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Post
+                                             SET CategoryId = 14
+                            WHERE categoryId = @categoryId
+                        ";
+
+                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Category
+                            WHERE Id = @categoryId
+                        ";
+
+                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
 
 
