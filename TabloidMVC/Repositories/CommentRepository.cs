@@ -50,7 +50,7 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                         SELECT c.Id, c.PostId, c.UserProfileId,
-                               c.Subect, c.Content, c.CreateDateTime
+                               c.Subject, c.Content, c.CreateDateTime
                         FROM Comment c
                         WHERE @postId = c.PostId
                      ";

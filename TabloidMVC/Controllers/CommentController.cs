@@ -21,9 +21,10 @@ namespace TabloidMVC.Controllers
             _commentRepository = commentRepository;
         }
         // GET: CommentController
-        public ActionResult Index()
+        public ActionResult Index(int id) //We will display only the comments related to the current post
         {
-            return View();
+            List<Comment> comments = _commentRepository.GetCommentsByPost(id);
+            return View(comments);
         }
 
         // GET: CommentController/Details/5
