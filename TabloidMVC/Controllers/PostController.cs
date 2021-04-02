@@ -171,23 +171,19 @@ namespace TabloidMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Subscribe(Subscription subscription)
+        public IActionResult Subscribe(Post post, Subscription subscription)
         {
-            try
-            {
-                .CreateDateTime = DateAndTime.Now;
+            
 
-                int userId = GetCurrentUserProfileId();
+                Subscription providerUserProfileId = GetCurrentUserProfileId();
+            Subscription subscriberUserProfileId = post.UserProfile.Id;
+                DateTime BeginDateTime = DateAndTime.Now;
 
-                _subscriptionRepository.Add(vm.Post);
+            _subscriptionRepository.Add(Subscription subscription);
 
-                return RedirectToAction("Details", new { id = vm.Post.Id });
-            }
-            catch
-            {
-                vm.CategoryOptions = _categoryRepository.GetAll();
-                return View(vm);
-            }
+                return RedirectToAction("Details", new { id = post.Id });
+            
+            
         }
 
 

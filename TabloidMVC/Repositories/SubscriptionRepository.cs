@@ -24,14 +24,14 @@ namespace TabloidMVC.Repositories
                             EndDateTime )
                         OUTPUT INSERTED.ID
                         Values (
-                            @SubscriberUserProfileId, @ProviderUserProfileId, @BeginDateTime,
-                            @EndDateTime )
+                            @subscriberUserProfileId, @providerUserProfileId, @beginDateTime,
+                            @endDateTime )
                         
                     ";
-                    cmd.Parameters.AddWithValue("@SubscriberUserProfileId", subscription.SubscriberUserProfileId);
-                    cmd.Parameters.AddWithValue("@ProviderUserProfileId", subscription.ProviderUserProfileId);
-                    cmd.Parameters.AddWithValue("@BeginDateTime", subscription.BeginDateTime);
-                    cmd.Parameters.AddWithValue("@EndDateTime", subscription.EndDateTime);
+                    cmd.Parameters.AddWithValue("@subscriberUserProfileId", subscription.SubscriberUserProfileId);
+                    cmd.Parameters.AddWithValue("@providerUserProfileId", subscription.ProviderUserProfileId);
+                    cmd.Parameters.AddWithValue("@beginDateTime", subscription.BeginDateTime);
+                    cmd.Parameters.AddWithValue("@endDateTime", subscription.EndDateTime);
                   
 
                     subscription.Id = (int)cmd.ExecuteScalar();
