@@ -57,7 +57,9 @@ namespace TabloidMVC.Controllers
 
                 _commentRepository.Add(comment);
 
-                return RedirectToAction("Post");
+                // Specifies the specific Action, Controller, and Route Value to return to
+                // The Route Value must be passed as an object
+                return RedirectToAction("Details", "Post", new { id = comment.PostId});
             }
             catch
             {
