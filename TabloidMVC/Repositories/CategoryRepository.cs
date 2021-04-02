@@ -15,7 +15,7 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, name FROM Category";
+                    cmd.CommandText = "SELECT c.id, c.name FROM Category c WHERE c.id != 14  ";
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<Category>();
