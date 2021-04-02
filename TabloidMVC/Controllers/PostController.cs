@@ -16,11 +16,14 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
 
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository)
+
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ISubscriptionRepository subscriptionRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _subscriptionRepository = subscriptionRepository;
         }
 
         public IActionResult Index()
@@ -166,6 +169,29 @@ namespace TabloidMVC.Controllers
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
         }
+
+        [HttpPost]
+        public IActionResult Subscribe(Subscription subscription)
+        {
+            try
+            {
+                .CreateDateTime = DateAndTime.Now;
+
+                int userId = GetCurrentUserProfileId();
+
+                _subscriptionRepository.Add(vm.Post);
+
+                return RedirectToAction("Details", new { id = vm.Post.Id });
+            }
+            catch
+            {
+                vm.CategoryOptions = _categoryRepository.GetAll();
+                return View(vm);
+            }
+        }
+
+
+
     }
 }
 
