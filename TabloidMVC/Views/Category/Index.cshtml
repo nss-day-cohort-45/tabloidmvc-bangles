@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -21,14 +22,17 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    var myModal = "myModal" + item.Id;
         <tr>
             
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
+
+
             <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.Id  })
-                @Html.ActionLink("Delete", "Delete", new {  id=item.Id })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
 }
