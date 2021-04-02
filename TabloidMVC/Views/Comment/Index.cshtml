@@ -1,0 +1,58 @@
+﻿@model TabloidMVC.Models.ViewModels.CommentIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@Model.Post.Title</h1> 
+
+<p>
+    <a asp-controller="Comment" asp-action="Create" asp-route-id="@Model.Post.Id" class="btn btn-outline-primary mx-1" title="Comment">
+        Comment
+    </a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment.Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment.Content)
+            </th>
+            <th>
+                Date Posted
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Comments) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDateTime)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <a asp-controller="Post" asp-action="Details" asp-route-id="@Model.Post.Id">Back to Post</a>
+</div>
