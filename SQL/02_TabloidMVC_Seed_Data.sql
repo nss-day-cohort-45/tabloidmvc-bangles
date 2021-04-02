@@ -10,7 +10,7 @@ SET IDENTITY_INSERT [Category] ON
 INSERT INTO [Category] ([Id], [Name]) 
 VALUES (1, 'Technology'), (2, 'Close Magic'), (3, 'Politics'), (4, 'Science'), (5, 'Improv'), 
 	   (6, 'Cthulhu Sightings'), (7, 'History'), (8, 'Home and Garden'), (9, 'Entertainment'), 
-	   (10, 'Cooking'), (11, 'Music'), (12, 'Movies'), (13, 'Regrets');
+	   (10, 'Cooking'), (11, 'Music'), (12, 'Movies'), (13, 'Regrets'), (14, 'No Category');
 SET IDENTITY_INSERT [Category] OFF
 
 
