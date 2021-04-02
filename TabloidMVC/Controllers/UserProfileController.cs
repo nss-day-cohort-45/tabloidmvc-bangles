@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TabloidMVC.Models;
 using TabloidMVC.Repositories;
@@ -23,7 +24,7 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController
         public ActionResult Index()
         {
-            var users = _userProfileRepository.GetAll().OrderBy(u=>u.DisplayName);
+            var users = _userProfileRepository.GetAll().OrderBy(u => u.DisplayName);
             return View(users);
         }
 
@@ -83,22 +84,39 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            int userId = GetCurrentUserProfileId();
+            UserProfile currentUser = _userProfileRepository.GetById(userId);
+            if (currentUser.UserTypeId == 1)
+            {
+                UserProfile userToDelete = _userProfileRepository.GetById(id);
+                return View(userToDelete);
+            } else
+            {
+                return NotFound();
+            }
         }
 
         // POST: UserProfileController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, UserProfile user)
         {
             try
             {
+                _userProfileRepository.Deactivate(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(user);
             }
         }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
+
     }
 }
