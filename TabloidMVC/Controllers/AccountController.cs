@@ -30,7 +30,7 @@ namespace TabloidMVC.Controllers
 
             if (userProfile == null)
             {
-                ModelState.AddModelError("Email", "Invalid email");
+                ModelState.AddModelError("Email", "Invalid email or user has been deactivated");
                 return View();
             }
 
