@@ -125,8 +125,7 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE Category
-                                             SET IsDeleted = 1
+                            DELETE FROM Category
                             WHERE Id = @id
                         ";
 
@@ -139,7 +138,7 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                             UPDATE Post
                                              SET CategoryId = 14
-                            WHERE Id = @id
+                            WHERE categoryId = @id
                         ";
 
                     cmd.Parameters.AddWithValue("@id", categoryId);
