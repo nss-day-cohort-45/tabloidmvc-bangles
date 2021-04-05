@@ -13,5 +13,7 @@ namespace TabloidMVC.Repositories
         Post GetUserPostById(int id, int userProfileId);
         void UpdatePost(Post post);
 
+        List<Post> GetUserPostBySub(int userProfileId);
+
     }
 }
