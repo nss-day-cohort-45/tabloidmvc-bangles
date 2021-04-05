@@ -66,7 +66,11 @@ namespace TabloidMVC.Controllers
             }
             else
             {
-                return NotFound();
+                ChangeUserTypeViewModel vm = new ChangeUserTypeViewModel()
+                {
+                    Message = "Only an administrator can edit a user's type."
+                };
+                return View(vm);
             }
         }
 
@@ -103,36 +107,48 @@ namespace TabloidMVC.Controllers
             if (currentUser.UserTypeId == 1)
             {
                 UserProfile userToDelete = _userProfileRepository.GetById(id);
-                if (userToDelete.UserTypeId == 1)
+                int adminCount = _userProfileRepository.GetAll().Where(up => up.UserTypeId == 1).ToList().Count;
+                DeleteUserProfileViewModel vm = new DeleteUserProfileViewModel()
                 {
-                    List<UserProfile> adminUsers = _userProfileRepository.GetAll().Where(up => up.UserTypeId == 1).ToList();
-                    if (adminUsers.Count <= 1)
-                    {
-                        return RedirectToAction("Index");
-                    }
-                }
+                    User = userToDelete,
+                    AdminCount = adminCount,
+                    Message = null
+                };
 
-                return View(userToDelete);
+                return View(vm);
             }
             else
             {
-                return NotFound();
+                DeleteUserProfileViewModel vm = new DeleteUserProfileViewModel()
+                {
+                    Message = "Only an administrator can deactivate a user."
+                };
+                return View(vm);
             }
         }
 
         // POST: UserProfileController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, UserProfile user)
+        public ActionResult Delete(int id, DeleteUserProfileViewModel vm)
         {
             try
             {
-                _userProfileRepository.Deactivate(id);
-                return RedirectToAction(nameof(Index));
+                UserProfile user = vm.User;
+                if (user.UserTypeId == 1 && vm.AdminCount <= 1)
+                {
+                    vm.Message = "Cannot deactivate the sole administrator. Elevate another user and try again.";
+                    return View(vm);
+                }
+                else
+                {
+                    _userProfileRepository.Deactivate(id);
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch
             {
-                return View(user);
+                return View(vm);
             }
         }
 
