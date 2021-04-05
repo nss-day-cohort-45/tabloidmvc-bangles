@@ -26,8 +26,12 @@ namespace TabloidMVC.Controllers
         public ActionResult Index()
         {
             UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             var users = _userProfileRepository.GetAll().OrderBy(u => u.DisplayName);
-            return View(users);
+                       return View(users);
         }
 
         public ActionResult Deactivated()
@@ -171,6 +175,6 @@ namespace TabloidMVC.Controllers
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
         }
-
+        
     }
 }
