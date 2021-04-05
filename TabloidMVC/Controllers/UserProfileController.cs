@@ -50,6 +50,10 @@ namespace TabloidMVC.Controllers
         public ActionResult Edit(int id)
         {
             UserProfile userToEdit = _userProfileRepository.GetById(id);
+            if (userToEdit == null)
+            {
+                return NotFound();
+            }
             int currentUserId = GetCurrentUserProfileId();
             UserProfile currentUser = _userProfileRepository.GetById(currentUserId);
             int adminCount = _userProfileRepository.GetAll().Where(up => up.UserTypeId == 1).ToList().Count;
@@ -60,7 +64,6 @@ namespace TabloidMVC.Controllers
                     UserTypes = _userProfileRepository.GetUserTypes(),
                     User = userToEdit,
                     AdminCount = adminCount,
-                    Message = null
                 };
                 return View(vm);
             }
@@ -107,12 +110,15 @@ namespace TabloidMVC.Controllers
             if (currentUser.UserTypeId == 1)
             {
                 UserProfile userToDelete = _userProfileRepository.GetById(id);
+                if (userToDelete == null)
+                {
+                    return NotFound();
+                }
                 int adminCount = _userProfileRepository.GetAll().Where(up => up.UserTypeId == 1).ToList().Count;
                 DeleteUserProfileViewModel vm = new DeleteUserProfileViewModel()
                 {
                     User = userToDelete,
                     AdminCount = adminCount,
-                    Message = null
                 };
 
                 return View(vm);
