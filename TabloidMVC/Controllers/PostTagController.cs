@@ -57,8 +57,9 @@ namespace TabloidMVC.Controllers
                 _postTagRepository.AddPostTag(postTag);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return View();
             }
         }
