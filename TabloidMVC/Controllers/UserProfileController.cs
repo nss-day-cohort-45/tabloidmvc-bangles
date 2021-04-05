@@ -25,6 +25,7 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController
         public ActionResult Index()
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
             var users = _userProfileRepository.GetAll().OrderBy(u => u.DisplayName);
             return View(users);
         }
