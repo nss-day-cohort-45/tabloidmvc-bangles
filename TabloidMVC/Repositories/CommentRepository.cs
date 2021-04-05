@@ -76,6 +76,60 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public Comment GetCommentById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT c.Id, c.PostId, c.UserProfileId, 
+                               c.Subject, c.Content, c.CreateDateTime,
+                               u.DisplayName AS userName
+                        FROM Comment c
+                        LEFT JOIN UserProfile u ON c.UserProfileId = u.Id
+                        WHERE @Id = c.Id
+                        ORDER BY CreateDateTime DESC
+                    ";
+
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    var reader = cmd.ExecuteReader();
+
+                    Comment comment = null;
+
+                    if (reader.Read())
+                    {
+                        comment = NewCommentFromReader(reader);
+                    }
+
+                    reader.Close();
+
+                    return comment;
+                }
+            }
+        }
+
+        public void Delete(int commentId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        DELETE FROM Comment
+                        WHERE Id = @commentId
+                    ";
+                    cmd.Parameters.AddWithValue("@commentId", commentId);
+
+                    // The ExecuteNonQuery() method closes the connection automatically
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         private Comment NewCommentFromReader(SqlDataReader reader)
         {
             return new Comment()
