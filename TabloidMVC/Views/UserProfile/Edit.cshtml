@@ -3,32 +3,49 @@
 @{
     ViewData["Title"] = "Change User Role";
 }
-<div class="container pt-5">
-    <div class="row justify-content-center">
-        <div class="card col-md-8 pt-3">
-            <h4 class="text-center">Change Role of User "@Model.User.DisplayName"</h4>
-            <form asp-action="Edit">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="User.Id" value=@Model.User.Id />
-                <div class="form-group">
-                    <label asp-for="User.UserTypeId" class="control-label">User Type</label>
-                    <select asp-for="User.UserTypeId" class="form-control">
-                        @foreach (UserType type in Model.UserTypes)
-                        {
-                            <option value="@type.Id">@type.Name</option>
-                        }
-                    </select>
+@if (Model.Message == null)
+{
+    <div class="container pt-5">
+        <div class="row justify-content-center">
+            <div class="card col-md-8 pt-3">
+                <h4 class="text-center">Change Role of User "@Model.User.DisplayName"</h4>
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="User.Id" value=@Model.User.Id />
+                    <input type="hidden" asp-for="AdminCount" value=@Model.AdminCount />
+                    <div class="form-group">
+                        <label asp-for="User.UserTypeId" class="control-label">User Type</label>
+                        <select asp-for="User.UserTypeId" class="form-control">
+                            @foreach (UserType type in Model.UserTypes)
+                            {
+                                <option value="@type.Id">@type.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+                <div class="text-center mb-2">
+                    <a asp-action="Index">Back to List</a>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            </form>
-    <div class="text-center mb-2">
-        <a asp-action="Index">Back to List</a>
-    </div>
+            </div>
         </div>
     </div>
-</div>
+
+}
+else
+{
+    <div class="container pt-5">
+        <div class="alert alert-danger">
+            @Model.Message
+        </div>
+        <div class="text-center mb-2">
+            <a asp-action="Index">Back to List</a>
+        </div>
+
+    </div>
+}
 
 
 @section Scripts {
