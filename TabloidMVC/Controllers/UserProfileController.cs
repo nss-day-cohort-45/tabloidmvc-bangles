@@ -31,11 +31,16 @@ namespace TabloidMVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
             var users = _userProfileRepository.GetAll().OrderBy(u => u.DisplayName);
-                       return View(users);
+            return View(users);
         }
 
         public ActionResult Deactivated()
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             var users = _userProfileRepository.GetDeactivated().OrderBy(u => u.DisplayName);
             return View(users);
         }
@@ -43,6 +48,11 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Details/5
         public ActionResult Details(int id)
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             UserProfile user = _userProfileRepository.GetById(id);
             if (user == null)
             {
@@ -165,6 +175,11 @@ namespace TabloidMVC.Controllers
 
         public ActionResult Reactivate(int id)
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             UserProfile user = _userProfileRepository.GetById(id);
             _userProfileRepository.Reactivate(user);
             return RedirectToAction("Index");
