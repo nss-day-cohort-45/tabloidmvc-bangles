@@ -36,13 +36,14 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: PostTagController/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
             List<Tag> tags = _tagRepository.GetAllTags();
             PostTagViewModel vm = new PostTagViewModel()
             {
-                PostTag = new PostTag(),
-                Tags = tags
+                PostTags = new List<int>(),
+                Tags = tags,
+                PostId = id
             };
             return View(vm);
         }
@@ -50,16 +51,22 @@ namespace TabloidMVC.Controllers
         // POST: PostTagController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PostTag postTag)
+        public ActionResult Create(PostTagViewModel vm)
         {
             try
             {
-                _postTagRepository.AddPostTag(postTag);
-                return RedirectToAction(nameof(Index));
+                foreach (int postTag in vm.PostTags)
+                {
+                    PostTag pT = new PostTag();
+                    pT.TagId = postTag;
+                    pT.PostId = vm.PostId;
+                    _postTagRepository.AddPostTag(pT);
+                }
+                
+                return RedirectToAction("Index", "Post");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
                 return View();
             }
         }

@@ -12,16 +12,14 @@
             <div class="row">
                 <div class="col-md-4">
                     <form class="" asp-action="Create">
+                        <input type="hidden" asp-for="PostId" value="@Model.PostId" />
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
+                        <select asp-for="PostTags">
                             @foreach (Tag tag in Model.Tags)
                             {
-                                <input asp-for="@tag.Selected" type="checkbox" checked="@tag.Selected" value="@tag.Id"  class="btn-check" id="@tag.Id" />
-                                <label class="btn btn-outline-primary" for="@tag.Id">@tag.Name</label>
-                                <br />
+                                <option class="form-group" value="@tag.Id">@tag.Name</option>
                             }
-                            <span asp-validation-for="PostTag.TagId" class="text-danger"></span>
-                        </div>
+                        </select>
                         <div class="form-group">
                             <input type="submit" value="Create" class="btn btn-primary" />
                         </div>
