@@ -52,12 +52,15 @@ namespace TabloidMVC.Controllers
             UserProfile userToEdit = _userProfileRepository.GetById(id);
             int currentUserId = GetCurrentUserProfileId();
             UserProfile currentUser = _userProfileRepository.GetById(currentUserId);
+            int adminCount = _userProfileRepository.GetAll().Where(up => up.UserTypeId == 1).ToList().Count;
             if (currentUser.UserTypeId == 1)
             {
                 ChangeUserTypeViewModel vm = new ChangeUserTypeViewModel()
                 {
                     UserTypes = _userProfileRepository.GetUserTypes(),
-                    User = userToEdit
+                    User = userToEdit,
+                    AdminCount = adminCount,
+                    Message = null
                 };
                 return View(vm);
             }
@@ -75,12 +78,20 @@ namespace TabloidMVC.Controllers
             try
             {
                 UserProfile user = vm.User;
-                _userProfileRepository.UpdateUserType(user);
-                return RedirectToAction("Index");
+                if (user.UserTypeId == 2 && vm.AdminCount <= 1)
+                {
+                    vm.Message = "Cannot change the role of the sole administrator. Elevate another user and try again.";
+                    return View(vm);
+                }
+                else
+                {
+                    _userProfileRepository.UpdateUserType(user);
+                    return RedirectToAction("Index");
+                }
             }
             catch
             {
-                return View(vm);
+                return RedirectToAction("Index");
             }
         }
 
@@ -92,6 +103,15 @@ namespace TabloidMVC.Controllers
             if (currentUser.UserTypeId == 1)
             {
                 UserProfile userToDelete = _userProfileRepository.GetById(id);
+                if (userToDelete.UserTypeId == 1)
+                {
+                    List<UserProfile> adminUsers = _userProfileRepository.GetAll().Where(up => up.UserTypeId == 1).ToList();
+                    if (adminUsers.Count <= 1)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
+
                 return View(userToDelete);
             }
             else
