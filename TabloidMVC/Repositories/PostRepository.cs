@@ -334,7 +334,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
                                LEFT JOIN Subscription s on s.SubscriberUserProfileId = @userId
-                        WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME() AND p.UserProfileId = s.ProviderUserProfileId";
+                        WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME() AND p.UserProfileId = s.ProviderUserProfileId AND s.EndDateTime IS NULL";
 
                     cmd.Parameters.AddWithValue("@userId", userProfileId);
                     var reader = cmd.ExecuteReader();

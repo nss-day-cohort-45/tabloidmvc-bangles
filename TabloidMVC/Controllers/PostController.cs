@@ -191,13 +191,22 @@ namespace TabloidMVC.Controllers
         public ActionResult Subscribe(Subscription subscription, Post post)
         {
             subscription.BeginDateTime = DateAndTime.Now;
-            subscription.EndDateTime = DateAndTime.Now;
+            
             _subscriptionRepository.Add(subscription);
 
             return RedirectToAction("Details", new { id = post.Id });
         }
 
-        
+        public ActionResult Unsubscribe(int id)
+        {
+           
+            Subscription subscription = new Subscription();
+            subscription.ProviderUserProfileId = id;
+            subscription.SubscriberUserProfileId = GetCurrentUserProfileId();
+
+
+            return View(subscription);
+        }
 
 
 

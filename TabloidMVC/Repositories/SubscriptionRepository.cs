@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@subscriberUserProfileId", subscription.SubscriberUserProfileId);
                     cmd.Parameters.AddWithValue("@providerUserProfileId", subscription.ProviderUserProfileId);
                     cmd.Parameters.AddWithValue("@beginDateTime", subscription.BeginDateTime);
-                    cmd.Parameters.AddWithValue("@endDateTime", DbUtils.ValueOrDBNull(subscription.EndDateTime));
+                    cmd.Parameters.AddWithValue("@endDateTime", DBNull.Value);
                   
 
                     subscription.Id = (int)cmd.ExecuteScalar();
@@ -41,9 +42,29 @@ namespace TabloidMVC.Repositories
             }
         }
 
-    
-    
-    
-    
+        public void Unsubscribe(Subscription subscription)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Subscription
+                            SET 
+                                EndDateTime = @endDateTime
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@endDateTime", subscription.EndDateTime);
+                    cmd.Parameters.AddWithValue("@id", subscription.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+
     }
 }
