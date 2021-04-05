@@ -171,17 +171,28 @@ namespace TabloidMVC.Controllers
         }
 
 
+        public ActionResult Subscribe(int id)
+        {
+            // Need to return a view that functions as a form that allows users to fill in Comment info with
+            // PostId should be based on the post routed from
+            // UserProfileId should be based on the current user
+            Subscription subscription = new Subscription();
+            subscription.ProviderUserProfileId = id;
+            subscription.SubscriberUserProfileId = GetCurrentUserProfileId();
+
+
+            return View(subscription);
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Subscribe(int id, Post post)
+        public ActionResult Subscribe(Subscription subscription, Post post)
         {
-
-            Subscription subscription = new Subscription();
-            subscription.ProviderUserProfileId = GetCurrentUserProfileId();
-            subscription.SubscriberUserProfileId = id;
             subscription.BeginDateTime = DateAndTime.Now;
-
-             _subscriptionRepository.Add(subscription);
+            subscription.EndDateTime = DateAndTime.Now;
+            _subscriptionRepository.Add(subscription);
 
             return RedirectToAction("Details", new { id = post.Id });
         }
