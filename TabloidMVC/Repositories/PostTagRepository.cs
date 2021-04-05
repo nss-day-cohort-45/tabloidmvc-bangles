@@ -38,5 +38,28 @@ namespace TabloidMVC.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public void UpdatePostTag(PostTag postTag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE PostTag
+                        set
+                            PostId = @postId,
+                            TagId = @tagId
+                        WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@postId", postTag.PostId);
+                    cmd.Parameters.AddWithValue("@tagId", postTag.TagId);
+                    cmd.Parameters.AddWithValue("@id", postTag.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

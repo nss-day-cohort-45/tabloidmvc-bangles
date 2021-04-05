@@ -6,6 +6,7 @@ namespace TabloidMVC.Repositories
     {
         void AddPostTag(PostTag postTag);
         void DeletePostTag(int postTagId);
+        void UpdatePostTag(PostTag postTag);
 
 
     }
