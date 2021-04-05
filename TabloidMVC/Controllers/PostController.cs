@@ -16,11 +16,14 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
 
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository)
+
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ISubscriptionRepository subscriptionRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _subscriptionRepository = subscriptionRepository;
         }
 
         public IActionResult Index()
@@ -166,6 +169,38 @@ namespace TabloidMVC.Controllers
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
         }
+
+
+        public ActionResult Subscribe(int id)
+        {
+            // Need to return a view that functions as a form that allows users to fill in Comment info with
+            // PostId should be based on the post routed from
+            // UserProfileId should be based on the current user
+            Subscription subscription = new Subscription();
+            subscription.ProviderUserProfileId = id;
+            subscription.SubscriberUserProfileId = GetCurrentUserProfileId();
+
+
+            return View(subscription);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Subscribe(Subscription subscription, Post post)
+        {
+            subscription.BeginDateTime = DateAndTime.Now;
+            subscription.EndDateTime = DateAndTime.Now;
+            _subscriptionRepository.Add(subscription);
+
+            return RedirectToAction("Details", new { id = post.Id });
+        }
+
+        
+
+
+
     }
 }
 
