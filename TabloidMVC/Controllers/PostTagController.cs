@@ -53,7 +53,11 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(PostTagViewModel vm)
         {
-            try
+            if (vm.PostTags == null)
+            {
+                return RedirectToAction("Details", "Post", new { id = vm.PostId });
+            }
+            else
             {
                 foreach (int postTag in vm.PostTags)
                 {
@@ -62,12 +66,7 @@ namespace TabloidMVC.Controllers
                     pT.PostId = vm.PostId;
                     _postTagRepository.AddPostTag(pT);
                 }
-                
-                return RedirectToAction("Index", "Post");
-            }
-            catch (Exception ex)
-            {
-                return View();
+                return RedirectToAction("Details", "Post", new { id = vm.PostId });
             }
         }
 
