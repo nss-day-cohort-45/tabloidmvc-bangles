@@ -16,13 +16,14 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ITagRepository _tagRepository;
         private readonly ISubscriptionRepository _subscriptionRepository;
 
-
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ISubscriptionRepository subscriptionRepository)
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ITagRepository tagRepository, ISubscriptionRepository subscriptionRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _tagRepository = tagRepository;
             _subscriptionRepository = subscriptionRepository;
         }
 
@@ -42,6 +43,7 @@ namespace TabloidMVC.Controllers
         public IActionResult Details(int id)
         {
             var post = _postRepository.GetPublishedPostById(id);
+            List<Tag> tags = _tagRepository.GetTagsByPostId(id);
             if (post == null)
             {
                 int userId = GetCurrentUserProfileId();
@@ -51,7 +53,12 @@ namespace TabloidMVC.Controllers
                     return NotFound();
                 }
             }
-            return View(post);
+            PostDetailsViewModel vm = new PostDetailsViewModel()
+            {
+                Post = post,
+                Tags = tags
+            };
+            return View(vm);
         }
 
         public IActionResult Create()
