@@ -36,7 +36,20 @@ namespace TabloidMVC.Repositories
 
         public void DeletePostTag(int postTagId)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        DELETE FROM PostTag
+                        WHERE Id = @postTagId";
+
+                    cmd.Parameters.AddWithValue("@postTagId", postTagId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void UpdatePostTag(PostTag postTag)
@@ -61,5 +74,27 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+        public void PostTagExist(PostTag postTag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT DISTINCT COUNT(Id) AS Count, PostId, TagId
+                        FROM PostTag
+                        WHERE PostId = @postId AND TagId = @tagId
+                        GROUP BY PostId, TagId";
+                    
+                    cmd.Parameters.AddWithValue("@postId", postTag.PostId);
+                    cmd.Parameters.AddWithValue("@tagId", postTag.TagId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
