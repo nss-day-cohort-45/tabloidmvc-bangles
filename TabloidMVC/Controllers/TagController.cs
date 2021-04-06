@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TabloidMVC.Models;
 using TabloidMVC.Repositories;
@@ -12,15 +13,22 @@ namespace TabloidMVC.Controllers
     public class TagController : Controller
     {
         private readonly ITagRepository _tagRepository;
+        private readonly IUserProfileRepository _userProfileRepository;
 
-        public TagController(ITagRepository tagRepository)
+        public TagController(ITagRepository tagRepository, IUserProfileRepository userProfileRepository)
         {
             _tagRepository = tagRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         // GET: TagController
         public ActionResult Index()
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             List<Tag> tags = _tagRepository.GetAllTags();
             return View(tags);
         }
@@ -34,6 +42,12 @@ namespace TabloidMVC.Controllers
         // GET: TagController/Create
         public ActionResult Create()
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -56,10 +70,15 @@ namespace TabloidMVC.Controllers
         // GET: TagController/Edit/5
         public ActionResult Edit(int id)
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             Tag tag = _tagRepository.GetTagById(id);
 
             if (tag == null)
-            { 
+            {
                 return NotFound();
             }
             return View(tag);
@@ -85,6 +104,11 @@ namespace TabloidMVC.Controllers
         // GET: TagController/Delete/5
         public ActionResult Delete(int id)
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             Tag tag = _tagRepository.GetTagById(id);
             return View(tag);
         }
@@ -99,11 +123,16 @@ namespace TabloidMVC.Controllers
                 _tagRepository.DeleteTag(id);
                 return RedirectToAction("Index");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 return View(tag);
             }
+        }
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }

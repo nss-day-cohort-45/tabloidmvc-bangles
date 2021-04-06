@@ -65,7 +65,8 @@ namespace TabloidMVC.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, userProfile.Id.ToString()),
                 new Claim(ClaimTypes.Email, userProfile.Email),
-                new Claim(ClaimTypes.Name, userProfile.DisplayName)
+                new Claim(ClaimTypes.Name, userProfile.DisplayName),
+                new Claim(ClaimTypes.Role, userProfile.UserTypeId == 1 ? "Admin" : "Author")
             };
 
             var claimsIdentity = new ClaimsIdentity(

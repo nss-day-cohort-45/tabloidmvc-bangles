@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TabloidMVC.Models;
 using TabloidMVC.Repositories;
@@ -13,14 +14,21 @@ namespace TabloidMVC.Controllers
     {
         // GET: CategoryController
         private readonly ICategoryRepository _categoryRepo;
+        private readonly IUserProfileRepository _userProfileRepository;
 
-        public CategoryController(ICategoryRepository categoryRepository)
+        public CategoryController(ICategoryRepository categoryRepository, IUserProfileRepository userProfileRepository)
         {
-            _categoryRepo = categoryRepository; 
+            _categoryRepo = categoryRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         public ActionResult Index()
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             List<Category> categories = _categoryRepo.GetAll();
             return View(categories);
         }
@@ -34,6 +42,12 @@ namespace TabloidMVC.Controllers
         // GET Create
         public ActionResult Create()
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -45,7 +59,7 @@ namespace TabloidMVC.Controllers
             try
             {
                 _categoryRepo.AddCategory(category);
-                return RedirectToAction(nameof(Index),"Category");
+                return RedirectToAction(nameof(Index), "Category");
             }
             catch
             {
@@ -56,6 +70,12 @@ namespace TabloidMVC.Controllers
         // GET Edit
         public ActionResult Edit(int id)
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Category category = _categoryRepo.GetCategoryById(id);
 
             if (category == null)
@@ -86,6 +106,12 @@ namespace TabloidMVC.Controllers
         // GET Delete
         public ActionResult Delete(int id)
         {
+            UserProfile currentUser = _userProfileRepository.GetById(GetCurrentUserProfileId());
+            if (currentUser.UserTypeId != 1)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             Category category = _categoryRepo.GetCategoryById(id);
             return View(category);
         }
@@ -105,6 +131,12 @@ namespace TabloidMVC.Controllers
             {
                 return View(category);
             }
+        }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
